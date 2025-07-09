@@ -13,7 +13,7 @@
 
 ---
 
-## 🧰 How to Use It
+## 🪰 How to Use It
 
 1. Copy the `jq` class into your JavaScript file.
 2. Pass your data (an array of objects) to it.
@@ -33,28 +33,36 @@ console.log(result); // [{ name: "Alice" }]
 
 ## 📘 Functions with Beginner-Friendly Examples
 
+Each function supports chaining and ends with `.get()` to return the final result.
+
+---
+
 ### `.query(sql, params)`
 
-Write simple queries like in SQL. Use `?` for placeholders:
+SQL-like query syntax using `?` for values.
 
 ```js
 const result = new jq(data)
-  .query("SELECT name, age WHERE age BETWEEN ? AND ? ORDER BY age DESC LIMIT 2", [20, 35]);
+  .query("SELECT name, age WHERE age BETWEEN ? AND ? ORDER BY age DESC LIMIT 2", [25, 35]);
 ```
+
+**Output:**
+
+```js
+[{ name: "Carol", age: 35 }, { name: "Alice", age: 30 }]
+```
+
+---
 
 ### `.filter(callback)`
 
-Filter using regular JavaScript:
-
 ```js
-new jq(data)
-  .filter(person => person.age > 25)
-  .get();
+new jq(data).filter(person => person.age > 25).get();
 ```
 
-### `.map(callback)`
+---
 
-Transform data:
+### `.map(callback)`
 
 ```js
 new jq(data)
@@ -62,29 +70,25 @@ new jq(data)
   .get();
 ```
 
+---
+
 ### `.sort(compareFn)`
 
-Sort the data:
-
 ```js
-new jq(data)
-  .sort((a, b) => b.age - a.age) // Descending
-  .get();
+new jq(data).sort((a, b) => b.age - a.age).get();
 ```
+
+---
 
 ### `.limit(n)`
 
-Take only the first `n` results:
-
 ```js
-new jq(data)
-  .limit(2)
-  .get();
+new jq(data).limit(2).get();
 ```
 
-### `.unique(key)`
+---
 
-Remove duplicates by a field:
+### `.unique(key)`
 
 ```js
 const emails = [
@@ -93,9 +97,9 @@ const emails = [
 new jq(emails).unique("email").get();
 ```
 
-### `.groupBy(key)`
+---
 
-Group by a specific field:
+### `.groupBy(key)`
 
 ```js
 const people = [
@@ -104,49 +108,49 @@ const people = [
 new jq(people).groupBy("dept").get();
 ```
 
-### `.sum(key)`
+---
 
-Add values in a field:
+### `.sum(key)`
 
 ```js
 new jq(data).sum("score").get();
 ```
 
-### `.average(key)`
+---
 
-Calculate the average:
+### `.average(key)`
 
 ```js
 new jq(data).average("score").get();
 ```
 
-### `.pluck(key)`
+---
 
-Get only one property from each item:
+### `.pluck(key)`
 
 ```js
 new jq(data).pluck("name").get();
 ```
 
-### `.pluckMany([keys])`
+---
 
-Pick multiple fields:
+### `.pluckMany([keys])`
 
 ```js
 new jq(data).pluckMany(["name", "age"]).get();
 ```
 
-### `.find(callback)`
+---
 
-Find the first match:
+### `.find(callback)`
 
 ```js
 new jq(data).find(person => person.name === "Bob").get();
 ```
 
-### `.join(otherArray, leftKey, rightKey, type)`
+---
 
-Merge (JOIN) two datasets:
+### `.join(otherArray, leftKey, rightKey, type)`
 
 ```js
 const users = [ { id: 1, name: "Alice" }, { id: 2, name: "Bob" } ];
@@ -157,47 +161,55 @@ new jq(users)
   .query("SELECT name, total");
 ```
 
-### `.reset()`
+---
 
-Go back to the original data:
+### `.reset()`
 
 ```js
 const query = new jq(data).filter(x => x.age > 30);
 query.reset().get();
 ```
 
+---
+
 ### `.get()`
 
-Get the current results (optional after most functions).
+Returns the current data at any point in the chain.
 
 ---
 
 ## 🧠 Who Is This For?
 
-* Beginners learning JavaScript or frontend
-* Devs building filters, lists, dashboards
-* Anyone who wants SQL-style power in JS
+* Beginners learning JavaScript or frontend development
+* Developers building filters, search, dashboards
+* Anyone who wants SQL-style querying in vanilla JS
 
 ---
 
 ## 📌 SQL Query Tips
 
-* `SELECT field1, field2`
-* `WHERE age > ? AND score < ?`
-* `ORDER BY age DESC`
-* `LIMIT 3`
+Use the `.query()` method for SQL-like power.
 
-You can also use:
+**Examples:**
 
-* `IN (?)` → match against a list
-* `NOT IN (?)`
-* `BETWEEN ? AND ?`
-* `LIKE ?` → partial matches (e.g., `%ice%`)
+```sql
+SELECT name, age
+WHERE age > ? AND dept IN (?)
+ORDER BY age DESC
+LIMIT 3
+```
+
+📅 Supported:
+
+* `WHERE`
+* `ORDER BY`
+* `LIMIT`
+* `IN`, `NOT IN`, `BETWEEN`, `LIKE`
 
 ---
 
 ## 🎉 Try It Out
 
-Copy this into a CodePen, JSFiddle, or your local project and test it on real data.
+Paste the class and some sample data into a CodePen, JSFiddle, or your project to try it out.
 
 Happy querying! 🔍💻
